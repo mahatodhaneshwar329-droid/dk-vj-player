@@ -1,0 +1,42 @@
+{
+  "name": "dk-edits-vj-player",
+  "version": "1.0.0",
+  "description": "DK Edits VJ Player - desktop output app",
+  "author": "DK Edits",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/crypto-test.js",
+    "helper:mac": "swiftc -target arm64-apple-macos11 tools/unmirror.swift -o build/um-arm && swiftc -target x86_64-apple-macos10.15 tools/unmirror.swift -o build/um-x64 && lipo -create build/um-arm build/um-x64 -output build/unmirror",
+    "dist": "electron-builder --publish never",
+    "dist:win": "electron-builder --win --publish never",
+    "dist:mac": "electron-builder --mac --publish never"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "in.dkedits.vjplayer",
+    "productName": "DK Edits VJ Player",
+    "directories": { "buildResources": "build", "output": "dist" },
+    "files": ["src/**/*", "build/icon.png"],
+    "mac": {
+      "category": "public.app-category.video",
+      "icon": "build/icon.png",
+      "identity": null,
+      "extraResources": [{ "from": "build/unmirror", "to": "unmirror" }],
+      "target": [{ "target": "dmg", "arch": ["arm64", "x64"] }]
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "deleteAppDataOnUninstall": true,
+      "runAfterFinish": true
+    }
+  }
+}
